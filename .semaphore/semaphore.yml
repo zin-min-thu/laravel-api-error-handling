@@ -5,20 +5,40 @@ agent:
     type: e1-standard-2
     os_image: ubuntu2004
 blocks:
-  - name: Test
+  - name: Install
     task:
       jobs:
-        - name: Test
+        - name: Composer
           commands:
+            - sem-version php 7.4
             - checkout
             - cache restore
             - composer install
+            - npm install
             - cache store
-            - cp .env.example .env
-            - 'php artisan key:generate'
-            - mkdir -p database
-            - touch database/database.sqlite
-            - ./vendor/bin/phpunit
       env_vars:
         - name: APP_ENV
           value: local
+  - name: Test
+    task:
+      env_vars:
+        - name: APP_ENV
+          value: local
+      prologue:
+        commands:
+          - sem-version php 7.4
+          - checkout
+          - cache restore
+          - cp .env.example .env
+          - 'php artisan key:generate'
+          - mkdir -p database
+          - touch database/database.sqlite
+      jobs:
+        - name: phpunit
+          commands:
+            - /vendor/bin/phpunit
+        - name: dusk
+          commands:
+            - 'php artisan dusk:chrome-driver 79'
+            - php artisan serve --env=.env.dusk.local --port=8010 &
+            - php artisan dusk
