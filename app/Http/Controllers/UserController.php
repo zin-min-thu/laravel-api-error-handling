@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Str;
 
 class UserController extends Controller
 {
@@ -23,9 +24,21 @@ class UserController extends Controller
     {
         // $user = User::find($id);
 
-        // return 'here';
+        // return $user;
 
-        // abort(404, 'Object not found');
+        $token = Str::random(80);
+
+        // $data['hash_token'] = Hash::make($token);
+
+        // return $data;
+
+        $user->forceFill([
+            'api_token' => $token,
+        ])->save();
+
+        return ['token' => $token];
+
+        abort(404, 'Object not found');
 
         return response()->json($user, 200);
     }
