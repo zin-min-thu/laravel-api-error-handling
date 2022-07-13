@@ -36,7 +36,7 @@ blocks:
       jobs:
         - name: phpunit
           commands:
-            - /vendor/bin/phpunit
+            - ./vendor/bin/phpunit
         - name: dusk
           commands:
             - 'php artisan dusk:chrome-driver 79'
