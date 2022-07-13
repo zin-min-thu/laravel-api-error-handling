@@ -39,6 +39,6 @@ blocks:
             - ./vendor/bin/phpunit
         - name: dusk
           commands:
-            - 'php artisan dusk:chrome-driver 79'
+            - 'php artisan dusk:chrome-driver 94'
             - php artisan serve --env=.env.dusk.local --port=8010 &
             - php artisan dusk
